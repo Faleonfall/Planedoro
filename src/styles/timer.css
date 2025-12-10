@@ -1,0 +1,115 @@
+/* Background */
+.timer-view.background-plane {
+    background: url("../assets/plane.jpg") center center / cover no-repeat;
+    min-height: 100vh;
+    width: 100vw;
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+}
+
+/* Card */
+.timer-view .glass-card {
+    background: var(--color-plane-glass);
+    backdrop-filter: blur(16px) saturate(150%);
+    -webkit-backdrop-filter: blur(16px) saturate(150%);
+    border-radius: 2rem;
+    box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 2px var(--color-plane-accent);
+    padding: 2.5rem 4rem 1.75rem;
+    margin: 2rem 0;
+}
+
+/* Digits */
+.timer-view .text-9xl {
+    font-size: 11rem !important;
+    text-shadow: 0 0 2px rgba(var(--color-plane-accent-rgb), 0.8),
+    0 0 3px rgba(var(--color-plane-accent-rgb), 0.6),
+    0 0 6px rgba(var(--color-plane-accent-rgb), 0.3);
+}
+
+.timer-view .text-plane-dot {
+    color: var(--color-plane-dot);
+    text-shadow: 0 0 2px rgba(var(--color-plane-dot-rgb), 0.8),
+    0 0 3px rgba(var(--color-plane-dot-rgb), 0.6),
+    0 0 8px rgba(var(--color-plane-dot-rgb), 0.3);
+}
+
+/* Transition */
+.timer-view .digit-fade-enter-active,
+.timer-view .digit-fade-leave-active {
+    transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.timer-view .digit-fade-enter-from,
+.timer-view .digit-fade-leave-to {
+    opacity: 0;
+}
+
+/* Button */
+.timer-view .cyber-btn {
+    position: relative;
+    color: var(--color-plane-dot);
+    background: var(--color-plane-glass);
+    font-family: var(--font-cockpit), sans-serif;
+    min-width: 13.5rem;
+    text-align: center;
+    transition: background 0.21s, color 0.21s, box-shadow 0.19s;
+    overflow: hidden;
+    padding: 0.75rem 3rem;
+    border: none;
+    border-radius: 1.125rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.15em;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 2px var(--color-plane-accent);
+    text-shadow: 0 0 1px rgba(var(--color-plane-dot-rgb), 0.8),
+    0 0 3px rgba(var(--color-plane-dot-rgb), 0.6),
+    0 0 6px rgba(var(--color-plane-dot-rgb), 0.3);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.timer-view .cyber-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+    box-shadow: 0 0 21px 9px var(--color-plane-accent);
+    filter: blur(3px);
+    transition: opacity 0.2s;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .timer-view .cyber-btn:hover {
+        background: var(--color-plane-accent);
+        color: var(--color-plane-glass);
+        box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 5px var(--color-plane-accent);
+        text-shadow: none;
+    }
+
+    .timer-view .cyber-btn:hover::before {
+        opacity: 0.85;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .timer-view .cyber-btn {
+        transition: background 0.25s cubic-bezier(.65, 0, .2, 1),
+        box-shadow 0.25s cubic-bezier(.8, .12, .19, 1),
+        color 0.15s,
+        transform 0.2s cubic-bezier(.8, .12, .19, 1);
+    }
+}
+
+.timer-view .cyber-btn:active {
+    background: var(--color-plane-accent);
+    color: var(--color-plane-glass);
+    box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 24px 5px var(--color-plane-accent);
+    transition: none;
+    text-shadow: none;
+}

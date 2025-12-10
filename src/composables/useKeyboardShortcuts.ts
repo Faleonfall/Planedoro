@@ -2,6 +2,8 @@ import {onMounted, onBeforeUnmount} from "vue";
 
 export function useKeyboardShortcuts(toggle: () => void, reset: () => void) {
     function handleKeyDown(e: KeyboardEvent) {
+        if (e.repeat) return;
+
         const tag = (e.target as HTMLElement).tagName;
         if (tag === "INPUT" || tag === "TEXTAREA" || (e.target as HTMLElement).isContentEditable) return;
 
