@@ -48,25 +48,33 @@
 /* Button */
 .timer-view .cyber-btn {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+
     color: var(--color-plane-dot);
     background: var(--color-plane-glass);
     font-family: var(--font-cockpit), sans-serif;
-    min-width: 13.5rem;
-    text-align: center;
-    transition: background 0.21s, color 0.21s, box-shadow 0.19s;
-    overflow: hidden;
-    padding: 0.75rem 3rem;
-    border: none;
-    border-radius: 1.125rem;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 0.15em;
     font-size: 1.5rem;
-    cursor: pointer;
-    box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 2px var(--color-plane-accent);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    text-align: center;
     text-shadow: 0 0 1px rgba(var(--color-plane-dot-rgb), 0.8),
     0 0 3px rgba(var(--color-plane-dot-rgb), 0.6),
     0 0 6px rgba(var(--color-plane-dot-rgb), 0.3);
+
+    min-width: 13.5rem;
+    padding: 0.75rem 3rem;
+    border: none;
+    border-radius: 1.125rem;
+    overflow: hidden;
+    cursor: pointer;
+
+    box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 2px var(--color-plane-accent);
+    transition: background 0.21s, color 0.21s, box-shadow 0.19s;
+
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
 }
@@ -82,6 +90,12 @@
     box-shadow: 0 0 21px 9px var(--color-plane-accent);
     filter: blur(3px);
     transition: opacity 0.2s;
+}
+
+/* Disable focus ring (Tab) visual changes */
+.timer-view .cyber-btn:focus,
+.timer-view .cyber-btn:focus-visible {
+    outline: none;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -112,4 +126,56 @@
     box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 24px 5px var(--color-plane-accent);
     transition: none;
     text-shadow: none;
+}
+
+/* =====================
+   Responsive adjustments
+   ===================== */
+
+@media (max-width: 768px) {
+    /* make timer a bit bigger on tablet */
+    .timer-view .text-9xl {
+        font-size: 8.5rem !important;
+    }
+
+    .timer-view .glass-card {
+        padding: 1.75rem 2.1rem 1.25rem;
+        margin: 1.5rem 0;
+    }
+
+    .timer-view .cyber-btn {
+        min-width: 11rem;
+    }
+
+    .timer-view .flex.space-x-12 > :not(:last-child) {
+        margin-inline-end: 2.5rem !important; /* was 3rem (space-x-12) */
+        margin-inline-start: 0 !important;
+    }
+
+    /* small horizontal padding on the whole view */
+    .timer-view.min-h-screen {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .timer-view .text-9xl {
+        font-size: 6rem !important;
+    }
+
+    .timer-view .glass-card {
+        padding: 1.75rem 2.25rem 1.25rem;
+    }
+
+    .timer-view .flex.space-x-12 > :not(:last-child) {
+        margin-inline-end: 1.5rem !important; /* was 3rem (space-x-12) */
+    }
+
+    .timer-view .cyber-btn {
+        font-size: 1.25rem;
+        width: 9rem;
+        min-width: 9rem;
+        padding: 0.75rem 2.75rem;
+    }
 }
