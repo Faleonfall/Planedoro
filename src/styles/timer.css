@@ -1,4 +1,21 @@
 /* Background */
+html {
+    background-color: var(--color-plane-glass-safari);
+}
+
+body {
+    height: 100%;
+    margin: 0;
+
+    /* Traps margins to stop scrollbars */
+    display: flex;
+    flex-direction: column;
+
+    /* Allows Pull-to-Update physics */
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+}
+
 .timer-view.background-plane {
     background: url("../assets/plane.jpg") center center/cover no-repeat;
     min-height: 100vh;
@@ -78,11 +95,11 @@
 
 .timer-view .cyber-btn::before {
     content: "";
-    position: absolute;
+    position: relative;
     inset: 0;
     border-radius: inherit;
     pointer-events: none;
-    z-index: 0;
+    z-index: -1;
     opacity: .6;
     box-shadow: 0 0 21px 9px var(--color-plane-accent);
     filter: blur(3px);
