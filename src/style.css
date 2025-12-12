@@ -17,5 +17,8 @@
     --color-plane-glass: rgba(41, 49, 69, 0.65);
     --color-plane-glass-hex: #293145;
     --font-cockpit: 'JetBrains Mono', 'Menlo', monospace;
+
+    /* Glass background for Safari */
+    --color-plane-glass-safari: rgba(41, 49, 69, 0.8);
 }
 

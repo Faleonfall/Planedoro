@@ -2,21 +2,15 @@
   <div class="timer-view min-h-screen flex flex-col justify-center items-center space-y-6 background-plane">
     <div class="glass-card flex flex-col items-center space-y-3">
       <div class="flex items-center text-9xl font-cockpit tabular-nums pb-3 select-none">
-        <transition name="digit-fade" mode="out-in">
-          <span
-              class="text-plane-accent w-[2ch] text-center inline-block"
-              :key="formattedMinutes + '-' + resetKey"
-          >{{ formattedMinutes }}</span>
-        </transition>
+        <span ref="minutesEl" class="text-plane-accent w-[2ch] text-center inline-block">
+          {{ shownMinutes }}
+        </span>
 
         <span class="text-plane-dot w-[1ch] text-center inline-block">:</span>
 
-        <transition name="digit-fade" mode="out-in">
-          <span
-              class="text-plane-accent w-[2ch] text-center inline-block"
-              :key="formattedSeconds + '-' + resetKey"
-          >{{ formattedSeconds }}</span>
-        </transition>
+        <span ref="secondsEl" class="text-plane-accent w-[2ch] text-center inline-block">
+          {{ shownSeconds }}
+        </span>
       </div>
     </div>
 
@@ -42,6 +36,7 @@
 import {ref} from "vue";
 import {useTimer} from "../composables/useTimer";
 import {useKeyboardShortcuts} from "../composables/useKeyboardShortcuts";
+import {useDigitFadeSwap} from "../animations/useDigitFadeSwap";
 
 const audioEl = ref<HTMLAudioElement | null>(null);
 
@@ -70,7 +65,6 @@ const {
 } = useTimer();
 
 const toggleWithChime = () => {
-  // If we are stopping, also stop any currently playing countdown sound
   if (isRunning.value) stopChime();
   toggle(playChime);
 };
@@ -81,4 +75,17 @@ const resetWithChime = () => {
 };
 
 useKeyboardShortcuts(toggleWithChime, resetWithChime);
+
+const minutesEl = ref<HTMLElement | null>(null);
+const secondsEl = ref<HTMLElement | null>(null);
+
+const {shownMinutes, shownSeconds} = useDigitFadeSwap({
+  minutesEl,
+  secondsEl,
+  formattedMinutes,
+  formattedSeconds,
+  resetKey,
+  dur: 0.15, // 0.15 + tiny smoother
+  ease: "power1.out",
+});
 </script>
