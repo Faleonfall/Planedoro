@@ -4,6 +4,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   base: '/Planedoro/',
+  server: {
+    allowedHosts: ['.trycloudflare.com'],
+  },
   plugins: [
     vue(),
     tailwindcss(),
