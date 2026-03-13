@@ -1,24 +1,23 @@
 @import "tailwindcss";
 
 @theme {
-    /* Numbers */
-    --color-plane-number: #42607b;
-    --color-plane-number-rgb: 66, 96, 123;
+  /* Numbers */
+  --color-plane-number: #42607b;
+  --color-plane-number-rgb: 66, 96, 123;
 
-    /* Dot/Colon */
-    --color-plane-dot: #e8ecef;
-    --color-plane-dot-rgb: 232, 236, 239;
+  /* Dot/Colon */
+  --color-plane-dot: #e8ecef;
+  --color-plane-dot-rgb: 232, 236, 239;
 
-    /* Button Text & Border */
-    --color-plane-accent: #b7c9d9;
-    --color-plane-accent-rgb: 183, 201, 217;
+  /* Button Text & Border */
+  --color-plane-accent: #b7c9d9;
+  --color-plane-accent-rgb: 183, 201, 217;
 
-    /* Glass background */
-    --color-plane-glass: rgba(41, 49, 69, 0.65);
-    --color-plane-glass-hex: #293145;
-    --font-cockpit: 'JetBrains Mono', 'Menlo', monospace;
+  /* Glass background */
+  --color-plane-glass: rgba(41, 49, 69, 0.65);
+  --color-plane-glass-hex: #293145;
+  --font-cockpit: "JetBrains Mono", "Menlo", monospace;
 
-    /* Glass background for Safari */
-    --color-plane-glass-safari: rgba(41, 49, 69, 0.8);
+  /* Glass background for Safari */
+  --color-plane-glass-safari: rgba(41, 49, 69, 0.8);
 }
-

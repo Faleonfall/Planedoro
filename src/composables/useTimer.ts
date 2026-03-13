@@ -1,16 +1,23 @@
-import { ref, computed, onBeforeUnmount } from "vue";
+import { ref, computed, onBeforeUnmount, type Ref } from "vue";
 import * as timerConfig from "../config/timerConfig";
 
-export function useTimer() {
+type UseTimerOptions = {
+  workMinutes?: Ref<number>;
+  breakMinutes?: Ref<number>;
+};
+
+export function useTimer(options: UseTimerOptions = {}) {
+  const workMinutes = options.workMinutes ?? ref(timerConfig.WORK_MINUTES);
+  const breakMinutes = options.breakMinutes ?? ref(timerConfig.BREAK_MINUTES);
   const isRunning = ref(false);
   const workState = ref(true); // true = work, false = break
-  const timeLeft = ref(timerConfig.WORK_MINUTES * 60); // seconds (display)
+  const timeLeft = ref(workMinutes.value * 60); // seconds (display)
 
   const resetKey = ref(0);
 
   // Drift-proof core: an absolute end timestamp (ms since epoch)
   let endTimestampMs = 0;
-  let pausedMsLeft = timerConfig.WORK_MINUTES * 60 * 1000;
+  let pausedMsLeft = workMinutes.value * 60 * 1000;
 
   // Chime scheduling
   let chimeTimeoutId: ReturnType<typeof setTimeout> | null = null;
@@ -67,10 +74,7 @@ export function useTimer() {
   }
 
   function phaseDurationSeconds() {
-    return (
-      (workState.value ? timerConfig.WORK_MINUTES : timerConfig.BREAK_MINUTES) *
-      60
-    );
+    return (workState.value ? workMinutes.value : breakMinutes.value) * 60;
   }
 
   function setPhase(seconds: number, playChime?: () => void) {
@@ -154,8 +158,8 @@ export function useTimer() {
     stopTimer();
     workState.value = true;
     endTimestampMs = 0;
-    pausedMsLeft = timerConfig.WORK_MINUTES * 60 * 1000;
-    timeLeft.value = timerConfig.WORK_MINUTES * 60;
+    pausedMsLeft = workMinutes.value * 60 * 1000;
+    timeLeft.value = workMinutes.value * 60;
     resetKey.value++;
   }
 

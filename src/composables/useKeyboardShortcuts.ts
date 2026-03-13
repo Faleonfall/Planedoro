@@ -3,6 +3,7 @@ import { onMounted, onBeforeUnmount } from "vue";
 export function useKeyboardShortcuts(toggle: () => void, reset: () => void) {
   function handleKeyDown(e: KeyboardEvent) {
     if (e.repeat) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
 
     const target = e.target;
     if (!(target instanceof HTMLElement)) return;

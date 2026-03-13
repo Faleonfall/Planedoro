@@ -1,14 +1,30 @@
 <template>
-  <div class="timer-view min-h-screen flex flex-col justify-center items-center space-y-6 background-plane">
+  <div
+    class="timer-view min-h-screen flex flex-col justify-center items-center space-y-6 background-plane"
+  >
+    <SettingsMenu
+      v-model:chime-enabled="chimeEnabled"
+      :timer-preset-label="timerPreset.label"
+      @cycle-timer-preset="cycleTimerPreset"
+    />
+
     <div class="glass-card flex flex-col items-center space-y-3">
-      <div class="flex items-center text-9xl font-cockpit tabular-nums pb-3 select-none">
-        <span ref="minutesEl" class="text-plane-accent w-[2ch] text-center inline-block">
+      <div
+        class="flex items-center text-9xl font-cockpit tabular-nums pb-3 select-none"
+      >
+        <span
+          ref="minutesEl"
+          class="text-plane-accent w-[2ch] text-center inline-block"
+        >
           {{ shownMinutes }}
         </span>
 
         <span class="text-plane-dot w-[1ch] text-center inline-block">:</span>
 
-        <span ref="secondsEl" class="text-plane-accent w-[2ch] text-center inline-block">
+        <span
+          ref="secondsEl"
+          class="text-plane-accent w-[2ch] text-center inline-block"
+        >
           {{ shownSeconds }}
         </span>
       </div>
@@ -26,34 +42,33 @@
     </div>
 
     <audio ref="audioEl" preload="auto">
-      <source src="../assets/sound.mp3" type="audio/mpeg"/>
-      <source src="../assets/sound.ogg" type="audio/ogg"/>
+      <source src="../assets/sound.mp3" type="audio/mpeg" />
+      <source src="../assets/sound.ogg" type="audio/ogg" />
     </audio>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
-import {useTimer} from "../composables/useTimer";
-import {useKeyboardShortcuts} from "../composables/useKeyboardShortcuts";
-import {useDigitFadeSwap} from "../animations/useDigitFadeSwap";
+import { computed, ref, watch } from "vue";
+import { DEFAULT_TIMER_PRESET, TIMER_PRESETS } from "../config/timerConfig";
+import { useTimer } from "../composables/useTimer";
+import { useKeyboardShortcuts } from "../composables/useKeyboardShortcuts";
+import { useChimeAudio } from "../composables/useChimeAudio";
+import { useDigitFadeSwap } from "../animations/useDigitFadeSwap";
+import SettingsMenu from "./SettingsMenu.vue";
 
 const audioEl = ref<HTMLAudioElement | null>(null);
-
-function playChime() {
-  const audio = audioEl.value;
-  if (!audio) return;
-  audio.currentTime = 0;
-  audio.play().catch(() => {
-  });
-}
-
-function stopChime() {
-  const audio = audioEl.value;
-  if (!audio) return;
-  audio.pause();
-  audio.currentTime = 0;
-}
+const chimeEnabled = ref(true);
+const timerPresetIndex = ref(0);
+const timerPreset = computed(
+  () => TIMER_PRESETS[timerPresetIndex.value] ?? DEFAULT_TIMER_PRESET,
+);
+const workMinutes = computed(() => timerPreset.value.workMinutes);
+const breakMinutes = computed(() => timerPreset.value.breakMinutes);
+const { playChime, stopChime } = useChimeAudio({
+  audioEl,
+  isEnabled: chimeEnabled,
+});
 
 const {
   isRunning,
@@ -62,7 +77,10 @@ const {
   formattedSeconds,
   toggle,
   reset,
-} = useTimer();
+} = useTimer({
+  workMinutes,
+  breakMinutes,
+});
 
 const toggleWithChime = () => {
   if (isRunning.value) stopChime();
@@ -74,12 +92,27 @@ const resetWithChime = () => {
   reset();
 };
 
+function cycleTimerPreset() {
+  timerPresetIndex.value = (timerPresetIndex.value + 1) % TIMER_PRESETS.length;
+}
+
+watch(chimeEnabled, (enabled) => {
+  if (!enabled) {
+    stopChime();
+  }
+});
+
+watch(timerPresetIndex, () => {
+  stopChime();
+  reset();
+});
+
 useKeyboardShortcuts(toggleWithChime, resetWithChime);
 
 const minutesEl = ref<HTMLElement | null>(null);
 const secondsEl = ref<HTMLElement | null>(null);
 
-const {shownMinutes, shownSeconds} = useDigitFadeSwap({
+const { shownMinutes, shownSeconds } = useDigitFadeSwap({
   minutesEl,
   secondsEl,
   formattedMinutes,
