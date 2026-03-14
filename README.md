@@ -2,7 +2,6 @@
 
 ![planedoro](https://github.com/user-attachments/assets/5a3195fc-3d25-4524-9da0-0d8262c76634)
 
-> 🧘 **Planedoro** is a minimalist, Pomodoro-style focus timer set in a calming airplane cabin environment. Built with Vite, Vue 3, TypeScript, and Tailwind CSS, it offers a distraction-free workflow, rigid 50/10 focus cycles, and a responsive experience across desktop and mobile.
 > 🧘 **Planedoro** is a minimalist focus timer set in a calming airplane cabin environment. Built with Vite, Vue 3, TypeScript, and Tailwind CSS, it offers a distraction-free workflow, three preset focus cycles, and a responsive experience across desktop and mobile.
 
 ---
@@ -21,6 +20,7 @@ Access the application:
 - **Distraction-Free:** Minimalist layout to keep you in the zone
 - **Responsive Design:** Optimized for desktop, tablet, and mobile screens
 - **Settings Popover:** Toggle chime playback and cycle focus modes from a compact top-right menu
+- **Session Recovery:** Preserves recent timer state across accidental refreshes and quick tab reopens
 - **Intuitive Controls:** Keyboard shortcuts for start/pause and reset
 - **Clear Visual Design:** Large timer display and high-contrast styling
 - **Instant Performance:** No loading screens, immediate start

@@ -1,4 +1,10 @@
-import { ref, computed, onBeforeUnmount, type Ref } from "vue";
+import {
+  computed,
+  getCurrentScope,
+  onScopeDispose,
+  ref,
+  type Ref,
+} from "vue";
 import * as timerConfig from "../config/timerConfig";
 
 export type TimerSessionSnapshot = {
@@ -203,9 +209,11 @@ export function useTimer(options: UseTimerOptions = {}) {
     }
   }
 
-  onBeforeUnmount(() => {
-    stopTimer();
-  });
+  if (getCurrentScope()) {
+    onScopeDispose(() => {
+      stopTimer();
+    });
+  }
 
   return {
     isRunning,

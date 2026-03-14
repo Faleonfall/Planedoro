@@ -29,7 +29,15 @@ body {
     content: "";
     position: fixed;
     inset: 0;
-    background: url("../assets/plane.jpg") center center/cover no-repeat;
+    background-color: var(--color-plane-glass-safari);
+    background-image: url("../assets/plane.jpg");
+    background-image: image-set(
+        url("../assets/plane.webp") type("image/webp") 1x,
+        url("../assets/plane.jpg") type("image/jpeg") 1x
+    );
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
     transform: translateZ(0);
     will-change: transform;
     z-index: -1;

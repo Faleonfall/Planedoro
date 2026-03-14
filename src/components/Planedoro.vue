@@ -120,7 +120,7 @@ watch(timerPresetIndex, () => {
   reset();
 });
 
-watch([isRunning, workState, timerPresetIndex], () => {
+watch([isRunning, workState, timerPresetIndex, resetKey], () => {
   persistTimerSession();
 });
 
@@ -129,7 +129,11 @@ useKeyboardShortcuts(toggleWithChime, resetWithChime);
 const minutesEl = ref<HTMLElement | null>(null);
 const secondsEl = ref<HTMLElement | null>(null);
 
-const { shownMinutes, shownSeconds, syncNow: syncDigitsNow } = useDigitFadeSwap({
+const {
+  shownMinutes,
+  shownSeconds,
+  syncNow: syncDigitsNow,
+} = useDigitFadeSwap({
   minutesEl,
   secondsEl,
   formattedMinutes,
@@ -162,12 +166,10 @@ onMounted(() => {
           storedSession.pausedMsLeft - elapsedSinceSave,
         );
 
-        hydrate(
-          {
-            pausedMsLeft: remainingMs,
-            workState: storedSession.workState,
-          },
-        );
+        hydrate({
+          pausedMsLeft: remainingMs,
+          workState: storedSession.workState,
+        });
         syncDigitsNow();
       } else {
         clearTimerSession();

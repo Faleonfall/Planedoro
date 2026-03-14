@@ -1,4 +1,4 @@
-import type { TimerPreset } from "../config/timerConfig";
+import { TIMER_PRESETS, type TimerPreset } from "../config/timerConfig";
 import type { TimerSessionSnapshot } from "./useTimer";
 
 const TIMER_SESSION_STORAGE_KEY = "planedoro.timerSession";
@@ -8,6 +8,26 @@ type StoredTimerSession = TimerSessionSnapshot & {
   presetId: TimerPreset["id"];
 };
 
+function isStoredTimerSession(value: unknown): value is StoredTimerSession {
+  if (!value || typeof value !== "object") return false;
+
+  const session = value as Partial<StoredTimerSession>;
+  const hasKnownPreset = TIMER_PRESETS.some(
+    (preset) => preset.id === session.presetId,
+  );
+
+  return (
+    typeof session.isRunning === "boolean" &&
+    typeof session.pausedMsLeft === "number" &&
+    Number.isFinite(session.pausedMsLeft) &&
+    session.pausedMsLeft >= 0 &&
+    typeof session.savedAtMs === "number" &&
+    Number.isFinite(session.savedAtMs) &&
+    typeof session.workState === "boolean" &&
+    hasKnownPreset
+  );
+}
+
 export function readTimerSession() {
   if (typeof window === "undefined") return null;
 
@@ -15,8 +35,16 @@ export function readTimerSession() {
   if (!rawValue) return null;
 
   try {
-    return JSON.parse(rawValue) as StoredTimerSession;
+    const parsedValue = JSON.parse(rawValue) as unknown;
+
+    if (!isStoredTimerSession(parsedValue)) {
+      clearTimerSession();
+      return null;
+    }
+
+    return parsedValue;
   } catch {
+    clearTimerSession();
     return null;
   }
 }

@@ -1,4 +1,11 @@
-import { nextTick, onBeforeUnmount, ref, watch, type Ref } from "vue";
+import {
+  nextTick,
+  onBeforeUnmount,
+  onMounted,
+  ref,
+  watch,
+  type Ref,
+} from "vue";
 import { gsap } from "gsap";
 
 type UseSettingsMenuMotionOptions = {
@@ -135,7 +142,9 @@ export function useSettingsMenuMotion({
     });
   });
 
-  window.addEventListener("pointerdown", handlePointerDown);
+  onMounted(() => {
+    window.addEventListener("pointerdown", handlePointerDown);
+  });
 
   onBeforeUnmount(() => {
     window.removeEventListener("pointerdown", handlePointerDown);

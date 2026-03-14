@@ -27,7 +27,9 @@ function readStoredChimeEnabled() {
 function readStoredPresetIndex() {
   if (typeof window === "undefined") return 0;
 
-  const storedPresetId = window.localStorage.getItem(STORAGE_KEYS.timerPresetId);
+  const storedPresetId = window.localStorage.getItem(
+    STORAGE_KEYS.timerPresetId,
+  );
 
   if (!storedPresetId) return 0;
 
