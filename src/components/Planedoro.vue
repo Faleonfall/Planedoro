@@ -49,17 +49,23 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, onBeforeUnmount, ref, watch } from "vue";
 import { DEFAULT_TIMER_PRESET, TIMER_PRESETS } from "../config/timerConfig";
 import { useTimer } from "../composables/useTimer";
 import { useKeyboardShortcuts } from "../composables/useKeyboardShortcuts";
 import { useChimeAudio } from "../composables/useChimeAudio";
+import { useTimerPreferences } from "../composables/useTimerPreferences";
+import {
+  ACCIDENTAL_RESTORE_WINDOW_MS,
+  clearTimerSession,
+  readTimerSession,
+  writeTimerSession,
+} from "../composables/useTimerSessionStorage";
 import { useDigitFadeSwap } from "../animations/useDigitFadeSwap";
 import SettingsMenu from "./SettingsMenu.vue";
 
 const audioEl = ref<HTMLAudioElement | null>(null);
-const chimeEnabled = ref(true);
-const timerPresetIndex = ref(0);
+const { chimeEnabled, timerPresetIndex } = useTimerPreferences();
 const timerPreset = computed(
   () => TIMER_PRESETS[timerPresetIndex.value] ?? DEFAULT_TIMER_PRESET,
 );
@@ -72,9 +78,12 @@ const { playChime, stopChime } = useChimeAudio({
 
 const {
   isRunning,
+  workState,
   resetKey,
   formattedMinutes,
   formattedSeconds,
+  getSnapshot,
+  hydrate,
   toggle,
   reset,
 } = useTimer({
@@ -92,6 +101,10 @@ const resetWithChime = () => {
   reset();
 };
 
+function persistTimerSession() {
+  writeTimerSession(getSnapshot(), timerPreset.value.id);
+}
+
 function cycleTimerPreset() {
   timerPresetIndex.value = (timerPresetIndex.value + 1) % TIMER_PRESETS.length;
 }
@@ -107,12 +120,16 @@ watch(timerPresetIndex, () => {
   reset();
 });
 
+watch([isRunning, workState, timerPresetIndex], () => {
+  persistTimerSession();
+});
+
 useKeyboardShortcuts(toggleWithChime, resetWithChime);
 
 const minutesEl = ref<HTMLElement | null>(null);
 const secondsEl = ref<HTMLElement | null>(null);
 
-const { shownMinutes, shownSeconds } = useDigitFadeSwap({
+const { shownMinutes, shownSeconds, syncNow: syncDigitsNow } = useDigitFadeSwap({
   minutesEl,
   secondsEl,
   formattedMinutes,
@@ -120,5 +137,56 @@ const { shownMinutes, shownSeconds } = useDigitFadeSwap({
   resetKey,
   dur: 0.15, // 0.15 + tiny smoother
   ease: "power1.out",
+});
+
+function handlePageHide() {
+  persistTimerSession();
+}
+
+onMounted(() => {
+  const storedSession = readTimerSession();
+
+  if (
+    storedSession &&
+    storedSession.presetId === timerPreset.value.id &&
+    storedSession.pausedMsLeft > 0
+  ) {
+    if (storedSession.isRunning) {
+      const elapsedSinceSave = Date.now() - storedSession.savedAtMs;
+      const wasRecentlyInterrupted =
+        elapsedSinceSave <= ACCIDENTAL_RESTORE_WINDOW_MS;
+
+      if (wasRecentlyInterrupted) {
+        const remainingMs = Math.max(
+          0,
+          storedSession.pausedMsLeft - elapsedSinceSave,
+        );
+
+        hydrate(
+          {
+            pausedMsLeft: remainingMs,
+            workState: storedSession.workState,
+          },
+        );
+        syncDigitsNow();
+      } else {
+        clearTimerSession();
+      }
+    } else {
+      hydrate({
+        pausedMsLeft: storedSession.pausedMsLeft,
+        workState: storedSession.workState,
+      });
+      syncDigitsNow();
+    }
+  }
+
+  window.addEventListener("pagehide", handlePageHide);
+  window.addEventListener("beforeunload", handlePageHide);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("pagehide", handlePageHide);
+  window.removeEventListener("beforeunload", handlePageHide);
 });
 </script>

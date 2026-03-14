@@ -1,6 +1,13 @@
 import { ref, computed, onBeforeUnmount, type Ref } from "vue";
 import * as timerConfig from "../config/timerConfig";
 
+export type TimerSessionSnapshot = {
+  isRunning: boolean;
+  pausedMsLeft: number;
+  savedAtMs: number;
+  workState: boolean;
+};
+
 type UseTimerOptions = {
   workMinutes?: Ref<number>;
   breakMinutes?: Ref<number>;
@@ -163,6 +170,39 @@ export function useTimer(options: UseTimerOptions = {}) {
     resetKey.value++;
   }
 
+  function getSnapshot(): TimerSessionSnapshot {
+    const msLeft = isRunning.value
+      ? Math.max(0, endTimestampMs - Date.now())
+      : pausedMsLeft;
+
+    return {
+      isRunning: isRunning.value,
+      pausedMsLeft: msLeft,
+      savedAtMs: Date.now(),
+      workState: workState.value,
+    };
+  }
+
+  function hydrate(
+    snapshot: Pick<TimerSessionSnapshot, "pausedMsLeft" | "workState">,
+    playChime?: () => void,
+  ) {
+    runToken++;
+    clearTickTimeout();
+    clearChimeTimeout();
+
+    workState.value = snapshot.workState;
+    pausedMsLeft = Math.max(0, snapshot.pausedMsLeft);
+    timeLeft.value = Math.max(0, Math.ceil(pausedMsLeft / 1000));
+    endTimestampMs = 0;
+    isRunning.value = false;
+    resetKey.value++;
+
+    if (playChime && pausedMsLeft > 0) {
+      startTimer(playChime);
+    }
+  }
+
   onBeforeUnmount(() => {
     stopTimer();
   });
@@ -174,6 +214,8 @@ export function useTimer(options: UseTimerOptions = {}) {
     resetKey,
     formattedMinutes,
     formattedSeconds,
+    getSnapshot,
+    hydrate,
     toggle,
     reset,
   };
