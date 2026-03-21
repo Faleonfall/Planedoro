@@ -77,6 +77,17 @@
           Tap the focus cycle time to switch modes
         </p>
       </section>
+
+      <div class="settings-menu__footer">
+        <a
+          href="https://github.com/Faleonfall/Planedoro"
+          class="settings-menu__link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+      </div>
     </div>
   </div>
 </template>

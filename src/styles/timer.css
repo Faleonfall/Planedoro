@@ -31,10 +31,8 @@ body {
     inset: 0;
     background-color: var(--color-plane-glass-safari);
     background-image: url("../assets/plane.jpg");
-    background-image: image-set(
-        url("../assets/plane.webp") type("image/webp") 1x,
-        url("../assets/plane.jpg") type("image/jpeg") 1x
-    );
+    background-image: image-set(url("../assets/plane.webp") type("image/webp") 1x,
+            url("../assets/plane.jpg") type("image/jpeg") 1x);
     background-position: center center;
     background-repeat: no-repeat;
     background-size: cover;

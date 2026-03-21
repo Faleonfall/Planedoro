@@ -8,38 +8,18 @@
       @cycle-timer-preset="cycleTimerPreset"
     />
 
-    <div class="glass-card flex flex-col items-center space-y-3">
-      <div
-        class="flex items-center text-9xl font-cockpit tabular-nums pb-3 select-none"
-      >
-        <span
-          ref="minutesEl"
-          class="text-plane-accent w-[2ch] text-center inline-block"
-        >
-          {{ shownMinutes }}
-        </span>
+    <TimerDisplay
+      v-model:minutes-el="minutesEl"
+      v-model:seconds-el="secondsEl"
+      :minutes="shownMinutes"
+      :seconds="shownSeconds"
+    />
 
-        <span class="text-plane-dot w-[1ch] text-center inline-block">:</span>
-
-        <span
-          ref="secondsEl"
-          class="text-plane-accent w-[2ch] text-center inline-block"
-        >
-          {{ shownSeconds }}
-        </span>
-      </div>
-    </div>
-
-    <div class="flex flex-col items-center space-y-3">
-      <div class="flex space-x-12">
-        <button class="cyber-btn select-none" @click="toggleWithChime">
-          {{ isRunning ? "Stop" : "Start" }}
-        </button>
-        <button class="cyber-btn select-none" @click="resetWithChime">
-          Reset
-        </button>
-      </div>
-    </div>
+    <TimerControls
+      :is-running="isRunning"
+      @toggle="toggleWithChime"
+      @reset="resetWithChime"
+    />
 
     <audio ref="audioEl" preload="auto">
       <source src="../assets/sound.mp3" type="audio/mpeg" />
@@ -63,6 +43,8 @@ import {
 } from "../composables/useTimerSessionStorage";
 import { useDigitFadeSwap } from "../animations/useDigitFadeSwap";
 import SettingsMenu from "./SettingsMenu.vue";
+import TimerControls from "./TimerControls.vue";
+import TimerDisplay from "./TimerDisplay.vue";
 
 const audioEl = ref<HTMLAudioElement | null>(null);
 const { chimeEnabled, timerPresetIndex } = useTimerPreferences();

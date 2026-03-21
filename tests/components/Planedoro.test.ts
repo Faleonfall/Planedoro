@@ -38,6 +38,14 @@ function mountPlanedoro() {
     global: {
       stubs: {
         SettingsMenu: true,
+        TimerDisplay: {
+          props: ["minutes", "seconds"],
+          template: `<div>{{ minutes }}:{{ seconds }}</div>`,
+        },
+        TimerControls: {
+          props: ["isRunning"],
+          template: `<div>{{ isRunning ? "Stop" : "Start" }}</div>`,
+        },
       },
     },
   });
