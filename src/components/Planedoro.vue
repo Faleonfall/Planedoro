@@ -17,6 +17,10 @@
 
     <TimerControls
       :is-running="isRunning"
+      :toggle-pressed="togglePressed"
+      :reset-pressed="resetPressed"
+      :interaction-locked="togglePressed || resetPressed"
+      @mouse-hold-change="mouseHeld = $event"
       @toggle="toggleWithChime"
       @reset="resetWithChime"
     />
@@ -106,7 +110,21 @@ watch([isRunning, workState, timerPresetIndex, resetKey], () => {
   persistTimerSession();
 });
 
-useKeyboardShortcuts(toggleWithChime, resetWithChime);
+const togglePressed = ref(false);
+const resetPressed = ref(false);
+const mouseHeld = ref(false);
+
+useKeyboardShortcuts(
+  toggleWithChime,
+  resetWithChime,
+  (pressed) => {
+    togglePressed.value = pressed;
+  },
+  (pressed) => {
+    resetPressed.value = pressed;
+  },
+  () => mouseHeld.value,
+);
 
 const minutesEl = ref<HTMLElement | null>(null);
 const secondsEl = ref<HTMLElement | null>(null);
@@ -127,6 +145,10 @@ const {
 
 function handlePageHide() {
   persistTimerSession();
+}
+
+function handleGlobalMouseUp() {
+  mouseHeld.value = false;
 }
 
 onMounted(() => {
@@ -167,10 +189,12 @@ onMounted(() => {
 
   window.addEventListener("pagehide", handlePageHide);
   window.addEventListener("beforeunload", handlePageHide);
+  window.addEventListener("mouseup", handleGlobalMouseUp);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener("pagehide", handlePageHide);
   window.removeEventListener("beforeunload", handlePageHide);
+  window.removeEventListener("mouseup", handleGlobalMouseUp);
 });
 </script>

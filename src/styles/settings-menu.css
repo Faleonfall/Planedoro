@@ -53,6 +53,11 @@
   -webkit-user-select: none;
 }
 
+.settings-menu__panel:focus,
+.settings-menu__panel:focus-visible {
+  outline: none;
+}
+
 .settings-menu__header {
   margin-bottom: 0.85rem;
 }
