@@ -1,7 +1,7 @@
 /* Background */
 html {
     height: 100%;
-    background-color: var(--color-plane-glass-safari);
+    background-color: var(--color-plane-backdrop-tint);
 }
 
 body {
@@ -29,7 +29,7 @@ body {
     content: "";
     position: fixed;
     inset: 0;
-    background-color: var(--color-plane-glass-safari);
+    background-color: var(--color-plane-backdrop-tint);
     background-image: url("../assets/plane.jpg");
     background-image: image-set(url("../assets/plane.webp") type("image/webp") 1x,
             url("../assets/plane.jpg") type("image/jpeg") 1x);
@@ -46,7 +46,6 @@ body {
     position: relative;
     background: var(--color-plane-glass);
     backdrop-filter: blur(16px) saturate(150%);
-    -webkit-backdrop-filter: blur(16px) saturate(150%);
     border-radius: 2rem;
     box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 2px var(--color-plane-accent);
     padding: 2.5rem 4rem 1.75rem;
@@ -91,26 +90,16 @@ body {
     overflow: hidden;
     cursor: pointer;
 
-    box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 2px var(--color-plane-accent);
+    box-shadow:
+        0 0 0 3px var(--color-plane-accent),
+        0 0 8px 2px var(--color-plane-accent),
+        0 0 14px 2px rgba(var(--color-plane-accent-rgb), 0.22);
     text-shadow: 0 0 1px rgba(var(--color-plane-dot-rgb), 0.8),
         0 0 3px rgba(var(--color-plane-dot-rgb), 0.6),
         0 0 6px rgba(var(--color-plane-dot-rgb), 0.3);
     transition: background .21s, color .21s, box-shadow .19s;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-}
-
-.timer-view .cyber-btn::before {
-    content: "";
-    position: relative;
-    inset: 0;
-    border-radius: inherit;
-    pointer-events: none;
-    z-index: -1;
-    opacity: .6;
-    box-shadow: 0 0 21px 9px var(--color-plane-accent);
-    filter: blur(3px);
-    transition: opacity .2s;
 }
 
 .timer-view .cyber-btn:focus,
@@ -122,19 +111,21 @@ body {
     .timer-view .cyber-btn:hover {
         background: var(--color-plane-accent);
         color: var(--color-plane-glass);
-        box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 8px 5px var(--color-plane-accent);
+        box-shadow:
+            0 0 0 3px var(--color-plane-accent),
+            0 0 8px 5px var(--color-plane-accent),
+            0 0 16px 3px rgba(var(--color-plane-accent-rgb), 0.28);
         text-shadow: none;
-    }
-
-    .timer-view .cyber-btn:hover::before {
-        opacity: .85;
     }
 }
 
 .timer-view .cyber-btn:active {
     background: var(--color-plane-accent);
     color: var(--color-plane-glass);
-    box-shadow: 0 0 0 3px var(--color-plane-accent), 0 0 24px 5px var(--color-plane-accent);
+    box-shadow:
+        0 0 0 3px var(--color-plane-accent),
+        0 0 24px 5px var(--color-plane-accent),
+        0 0 18px 4px rgba(var(--color-plane-accent-rgb), 0.34);
     text-shadow: none;
     transition: none;
 }

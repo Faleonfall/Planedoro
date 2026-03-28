@@ -18,6 +18,6 @@
   --color-plane-glass-hex: #293145;
   --font-cockpit: "JetBrains Mono", "Menlo", monospace;
 
-  /* Glass background for Safari */
-  --color-plane-glass-safari: rgba(41, 49, 69, 0.8);
+  /* Backdrop tint behind the plane image */
+  --color-plane-backdrop-tint: rgba(41, 49, 69, 0.8);
 }
