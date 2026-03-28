@@ -47,6 +47,11 @@ function buttonClass(pressed: boolean) {
 
 function emitIfUnlocked(event: "toggle" | "reset") {
   if (props.interactionLocked) return;
-  emit(event);
+  if (event === "toggle") {
+    emit("toggle");
+    return;
+  }
+
+  emit("reset");
 }
 </script>
