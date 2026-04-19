@@ -103,7 +103,7 @@ describe("Planedoro recovery", () => {
     expect(window.localStorage.getItem("planedoro.timerSession")).toBeNull();
   });
 
-  it("restores paused sessions regardless of age", async () => {
+  it("restores paused sessions within the 48-hour ttl", async () => {
     setLocalStorageValues({
       "planedoro.timerPresetId": "classic",
       "planedoro.timerSession": JSON.stringify({
@@ -121,6 +121,26 @@ describe("Planedoro recovery", () => {
     expect(wrapper.text()).toContain("01");
     expect(wrapper.text()).toContain("35");
     expect(wrapper.text()).toContain("Start");
+  });
+
+  it("discards paused sessions older than the 48-hour ttl", async () => {
+    setLocalStorageValues({
+      "planedoro.timerPresetId": "classic",
+      "planedoro.timerSession": JSON.stringify({
+        isRunning: false,
+        pausedMsLeft: 95_000,
+        savedAtMs: Date.now() - 49 * 60 * 60_000,
+        workState: false,
+        presetId: "classic",
+      }),
+    });
+
+    const wrapper = mountPlanedoro();
+    await nextTick();
+
+    expect(wrapper.text()).toContain("25");
+    expect(wrapper.text()).toContain("00");
+    expect(window.localStorage.getItem("planedoro.timerSession")).toBeNull();
   });
 
   it("ignores saved sessions when the preset does not match", async () => {

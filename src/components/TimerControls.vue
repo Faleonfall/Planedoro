@@ -40,7 +40,6 @@ function buttonClass(pressed: boolean) {
     "cyber-btn timer-controls__button select-none",
     {
       "timer-controls__button--pressed": pressed,
-      "timer-controls__button--locked": props.interactionLocked,
     },
   ];
 }

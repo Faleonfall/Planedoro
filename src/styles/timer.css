@@ -128,17 +128,6 @@ body {
     transition: none;
 }
 
-.timer-view .timer-controls__button--pressed {
-    background: var(--color-plane-accent);
-    color: var(--color-plane-glass);
-    box-shadow:
-        0 0 0 3px var(--color-plane-accent),
-        0 0 22px 5px rgba(var(--color-plane-accent-rgb), 0.46);
-    transform: translateY(1px);
-    text-shadow: none;
-    transition: none;
-}
-
 .timer-view .timer-controls__button--pressed,
 .timer-view .timer-controls__button--pressed:hover,
 .timer-view .timer-controls__button--pressed:focus,
@@ -151,10 +140,6 @@ body {
     transform: translateY(1px);
     text-shadow: none !important;
     transition: none;
-}
-
-.timer-view .timer-controls__button--locked {
-    pointer-events: none;
 }
 
 /* Responsive */

@@ -43,6 +43,7 @@ import {
   ACCIDENTAL_RESTORE_WINDOW_MS,
   clearTimerSession,
   readTimerSession,
+  TIMER_SESSION_TTL_MS,
   writeTimerSession,
 } from "../composables/useTimerSessionStorage";
 import { useDigitFadeSwap } from "../animations/useDigitFadeSwap";
@@ -153,14 +154,17 @@ function handleGlobalMouseUp() {
 
 onMounted(() => {
   const storedSession = readTimerSession();
+  const elapsedSinceSave = storedSession
+    ? Date.now() - storedSession.savedAtMs
+    : 0;
 
   if (
     storedSession &&
     storedSession.presetId === timerPreset.value.id &&
-    storedSession.pausedMsLeft > 0
+    storedSession.pausedMsLeft > 0 &&
+    elapsedSinceSave <= TIMER_SESSION_TTL_MS
   ) {
     if (storedSession.isRunning) {
-      const elapsedSinceSave = Date.now() - storedSession.savedAtMs;
       const wasRecentlyInterrupted =
         elapsedSinceSave <= ACCIDENTAL_RESTORE_WINDOW_MS;
 
@@ -185,6 +189,8 @@ onMounted(() => {
       });
       syncDigitsNow();
     }
+  } else if (storedSession) {
+    clearTimerSession();
   }
 
   window.addEventListener("pagehide", handlePageHide);

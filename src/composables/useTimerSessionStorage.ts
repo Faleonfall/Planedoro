@@ -3,6 +3,7 @@ import type { TimerSessionSnapshot } from "./useTimer";
 
 const TIMER_SESSION_STORAGE_KEY = "planedoro.timerSession";
 export const ACCIDENTAL_RESTORE_WINDOW_MS = 2 * 60 * 1000;
+export const TIMER_SESSION_TTL_MS = 48 * 60 * 60 * 1000;
 
 type StoredTimerSession = TimerSessionSnapshot & {
   presetId: TimerPreset["id"];
